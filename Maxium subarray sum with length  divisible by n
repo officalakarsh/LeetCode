@@ -1,0 +1,27 @@
+long long maxSubarraySum(int* nums, int numsSize, int k) {
+    long long prefix[numsSize + 1];
+    prefix[0] = 0;
+
+    for (int i = 1; i <= numsSize; i++) {
+        prefix[i] = prefix[i - 1] + nums[i - 1];
+    }
+    long long minPrefix[k];
+    for (int i = 0; i < k; i++) minPrefix[i] = LLONG_MAX;
+
+    long long maxSum = LLONG_MIN;
+
+    for (int i = 0; i <= numsSize; i++) {
+        int r = i % k;
+
+        if (minPrefix[r] != LLONG_MAX) {
+            long long currentSum = prefix[i] - minPrefix[r];
+            if (currentSum > maxSum) maxSum = currentSum;
+        }
+
+        if (prefix[i] < minPrefix[r]) {
+            minPrefix[r] = prefix[i];
+        }
+    }
+
+    return maxSum;
+}
