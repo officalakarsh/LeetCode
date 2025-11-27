@@ -1,0 +1,52 @@
+#define MOD 1000000007
+
+int numberOfPaths(int** grid, int gridSize, int* gridColSize, int k) {
+    int m = gridSize;
+    int n = gridColSize[0];
+
+    // Allocate dp[m][n][k]
+    long long ***dp = (long long ***)malloc(m * sizeof(long long **));
+    for (int i = 0; i < m; i++) {
+        dp[i] = (long long **)malloc(n * sizeof(long long *));
+        for (int j = 0; j < n; j++) {
+            dp[i][j] = (long long *)calloc(k, sizeof(long long));
+        }
+    }
+
+    dp[0][0][grid[0][0] % k] = 1;
+
+    for (int i = 0; i < m; i++) {
+        for (int j = 0; j < n; j++) {
+            int val = grid[i][j] % k;
+
+            // From top
+            if (i > 0) {
+                for (int r = 0; r < k; r++) {
+                    int newR = (r + val) % k;
+                    dp[i][j][newR] = (dp[i][j][newR] + dp[i-1][j][r]) % MOD;
+                }
+            }
+
+            // From left
+            if (j > 0) {
+                for (int r = 0; r < k; r++) {
+                    int newR = (r + val) % k;
+                    dp[i][j][newR] = (dp[i][j][newR] + dp[i][j-1][r]) % MOD;
+                }
+            }
+        }
+    }
+
+    int result = dp[m-1][n-1][0];
+
+    // free memory
+    for (int i = 0; i < m; i++) {
+        for (int j = 0; j < n; j++)
+            free(dp[i][j]);
+        free(dp[i]);
+    }
+    free(dp);
+
+    return result;
+}
+
