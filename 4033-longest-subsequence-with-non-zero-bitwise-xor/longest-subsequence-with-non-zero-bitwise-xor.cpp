@@ -10,16 +10,10 @@ public:
             if (x != 0)
                 hasNonZero = true;
         }
-
-        // Entire array has non-zero XOR
         if (xr != 0)
             return n;
-
-        // XOR is zero, but we can remove one non-zero element
         if (hasNonZero)
             return n - 1;
-
-        // All elements are zero
         return 0;
     }
 };
